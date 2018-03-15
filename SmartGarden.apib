@@ -1,0 +1,303 @@
+# SamrtGarden
+
+SamrtGarden是一款结合智能硬件的应用，用户可以使用手机/web App 远程管理自己的花盆，获取植物最新的状态信息和控制智能花盆打开或关闭相关传感器。
+
+
+本版本接口，尽量不提供路由控制，因为React本身的路由控制已经可以很好的完成处理请求分类，后端只需要专注于请求校验与数据检索。合理的最好职责分离。
+
+
+# SamrtGarden API ROOT [/]
+
+This resource does not have any attributes. Instead it offers the initial API affordances in the form of the links in the JSON body.
+
+## Retrieve the Entry Point(检索入口点) [GET]
+
++ Response 200 (application/json)
+
+    {
+        "message": "If u a user. Please login"
+        "login_url": "/user/login"
+    }
+
+## Group User
+
+Resources relatrd to User in the API.
+
+## Login [/user/login]
+
+用户登陆接口.
+
+A response object has the following attributes:
+
++ token - client should store the token
++ user_id - current user id
+
+### user login [GET]
+
+This action allow user to login and get a token.
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Request (application/json)
+
+    + Headers
+
+        Authorization: Basic username:password
+
++ Response 200 (application/json)
+    + Body
+
+        {
+            "token": "sdafAGEQGEWGKjegbOHIGBFOUbvguevgyuVEUGYVeuygugyu",
+            "user_id": "123",
+            "scope": all
+            "expires_in": 300
+            "token_type": Bearer
+        }
+
+## User profile [/user/profile]
+
+暂定接口
+
+用户自定义自己的一些信息。别名啊，性别啊，等等。
+
+### View user profile detail [GET] 
+暂定action
+### Modify user profile [PUT]
+暂定action
+
+
+
+## Register [/user/register]
+
+新用户注册接口
+
+A response object has following attributes:
+
++ result - 创建用户的结果
++ message - 结果信息, 新用户的id，或者失败的信息。
+
+ ### register a new user [POST]
+
+This action is create a new user
+
+客户端需要先注册，校验注册成功后，再次请求`user/login`以获得该用户的token。
+
+
++ Request (application/json)
+    
+    {
+        "username": "igp@igp.com",
+        "password": "123456789"
+    }
+
++ Response 200 (application/json)
+
+    {
+        "result":"success",
+        "message": "new user_id is 123"
+    }
+
++ Response 401 (text/plain)
+
+    The username is already existed!
+
++ Response 410 (text/plain)
+
+    The request parameters is broken!
+
+# OAuth 2
+This API Blueprint showcases OAuth 2. 
+基于OAuth2认证相关的API。
+
+## OAuth token exchange [/oauth/token]
+
+>What is JSON Web Token? <br>
+>JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed. JWTs can be signed using a secret (with the HMAC algorithm) or a public/private key pair using RSA. <br>
+>名词解释：`jwt`全称`JSON web Tokens`, 表示Json请求体内用于校验的安全认证字段。详情请看[Introduction to JSON Web Tokens](https://jwt.io/introduction/)
+
+### Exchange credentials for token (获取最新的token) [POST]
+
++ Request
+    + Attribute (OAuth grant request)
+    + Headers
+
+        Authorization: Basic 123456789
+
++ Response 200 (application/json)
+    + Attributes (OAuth valid response 认证返回的响应结果,里面包含token)
+
++ Request
+    + Attributes (OAuth jwt-bearer grant request)
+
++ Response 200 (application/json)
+    +  Attributes (OAuth valid response)
+
+
+# Group Flowerpot
+
+Resources relatrd to Flowerpot in the API.
+花盆终端的相关API。
+
+
+## List all Flowerpots [/flowerpots]
+
+获取所有的花盆对象数据。先验证，获取token，再请求本api。
+
+
+请求成功后会会获取一个数据容器，字段如下：
++ flowerpots - An array of flowerpots object(当前用户所有花盆对象组成的数组)
+
++ Parameters
+    + flowerpot_name: my new flowerpot (required, string) - 花盆的名字
+    + flowerpot_id: 1s45d2d4d (required, string) - 花盆的id，扫描二维码获得
+    + created_at: 2018-03-11T08:40:51.620Z (required, timestamp) - 绑定花盆的时间，精确到秒级。app可以通过用户点击提交按钮的时刻计算得到。
+    + flowerpot_tag: default (requiored, string) - 花盆的tag，属于保留字段，方便今后对于排序，默认选中等功能的支持。’
+    + flowerpot_plant_type (required, string) - 花盆内植物的种类
+    + flowerpot_plant_name (not required, string) - 花盆内植物的名字
+
+### View all Flowerpots [GET]
+
++ Request
+
+    + Headers
+
+        Authentication: Bearer JWT
+
+
++ Response 200 (application/json)
+
+    {
+        "flowerpots" : 
+        [
+            {
+                "flowerpot_name": "My first flowerpot",
+                "flowerpot_id": "db54d5b4sd5b4sd65a",
+                "flowerpot_url": "/flowerpots/1",
+                "flowerpot_img_url": "/img/1.png",
+                "flowerpot_plant_type": "greenplant",
+                "flowerpot_plant_name": "my faviout flower",
+                "flowerpot_plant_type_id": "456",                
+                "created_at": "2018-03-11T08:40:51.620Z",
+                "flowerpot_tag": "default",
+                "flowerpot_push_frequency": "5"
+                "flowerpot_plant_status": {
+                    "air_temperature": "20"
+                    "air_humidity": : "30"
+                    "luminous_intensity": "300"
+                    "soil_humidity": "35"
+                },
+                "flowerpot_trigger_status": {
+                    "water_trigger": "off"
+                }
+                "flower_self_status" : {
+                    "now_time":"2018-03-11T19:05:51.620Z"
+                    "now_water_volume": "90"
+                    "now_electricity": "54"
+                }
+            },
+            {
+                "flowerpot_name": "My Scond flowerpot",
+                "flowerpot_id": "cccccccccccccccccccc",
+                "flowerpot_url": "/flowerpots/2",
+                "flowerpot_img_url": "/img/2.png",
+                "flowerpot_plant_type": "greenplant",
+                "flowerpot_plant_name": "my faviout flower",
+                "flowerpot_plant_type_id": "456",                
+                "created_at": "2018-03-11T08:40:51.620Z",
+                "flowerpot_tag": "default",
+                "flowerpot_push_frequency": "5"
+                "flowerpot_plant_status": {
+                    "air_temperature": "20"
+                    "air_humidity": : "30"
+                    "luminous_intensity": "300"
+                    "soil_humidity": "35"
+                },
+                "flowerpot_trigger_status": {
+                    "water_trigger": "off"
+                }
+                "flower_self_status" : {
+                    "now_time":"2018-03-11T19:05:51.620Z"
+                    "now_water_volume": "90"
+                    "now_electricity": "54"
+                }
+            }
+        ]
+    }
+
+
++ Response 401 (text/plain)
+
+    Nothing! The user without any flowerpots.
+
+
+
+### Create a new flowerpot [POST]
+
++ Request (application/json)
+
+    + Headers
+
+        Authentication: Bearer JWT
+    
+    + Body
+
+        {
+            "flowerpot_name":
+            "flowerpot_id":
+            "created_at":
+            "flowerpot_tag": 
+            "flowerpot_plant_type":
+            "flowerpot_plant_name":
+        }
+
+
++ Response 200 (application/json)
+
+    {
+        "result": "success"
+        "flowerpot_url": "/flowerpots/5"
+    }
+
++ Response 401 (text/plain)
+
+    Flowerpot parameters is wrong!
+
+
+## Flowerpot [/flowerpots/{flowerpot_id}]
+
+查看一个花盆的详细信息，获得一个花盆的当前状态的所有信息。一个花盆对象的字段如下：
+
++ "flowerpot_name":             `string`, 花盆的名字
++ "flowerpot_id":               `string`, 花盆的ID
++ "flowerpot_url":              `string`, 花盆的url
++ "flowerpot_img_url":          `string`, 花盆的自定义图片的url(可选字段)
++ "flowerpot_plant_type":       `string`, 花盆内植被的种类
++ "flowerpot_plant_name":       `string`，花盆内植物的别名
++ "flowerpot_plant_type_id":    `string`, 花盆内植物的id        
++ "created_at":                 `An ISO8601 date`, 花盆创建/绑定的时间
++ "flowerpot_tag":              `string`, 花盆的tag (保留字段，为扩展功能)
++ "flowerpot_push_frequency":   `number`, 花盆向服务器推送植被状态的时间频率，单位为秒。
++ "flowerpot_plant_status"      `object`, 此刻当前花盆内植被的状态信息
+    + "air_temperature":        `number`, 此刻环境的温度
+    + "air_humidity":           `number`, 此刻环境的湿度
+    + "luminous_intensity":     `number`，此刻环境的光照强度
+    + "soil_humidity":          `number`, 此刻土壤的湿度
++ "flowerpot_trigger_status"    `object`, 此刻花盆智能触发器的状态
+    + "water_trigger":          `string`, 此刻自动蓄水触发器的状态，off/on
++ "flowerpot_self_status":      `object`, 此刻当前花盆自身的状态
+    + "now_time": -             `An ISO8601 date`， 此刻花盆的硬件时钟的时间 
+    + "now_electricity":        `string` ，此刻花盆的电量
+    + "now_water_volume":       `number`, 此刻花盆的水量
+    
+
+### View a flowerpot detail [GET]
+
+### Update a flowerpot [PUT]
+
+### Push status data [POST]
+
+### Delete a flowerpot [DELETE]

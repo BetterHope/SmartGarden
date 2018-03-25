@@ -245,6 +245,10 @@ Resources relatrd to Flowerpot in the API.
                         }
                     ]
             }
+            
++ Response 401 (text/plain)
+
+            Nothing! The user without any flowerpots.
 
 ### Create a new flowerpot [POST]
 
@@ -272,3 +276,36 @@ Resources relatrd to Flowerpot in the API.
 + Response 401 (text/plain)
 
         Flowerpot parameters is wrong!
+
+## Flowerpot [/flowerpots/{flowerpot_id}]
+
+### Data Structure
+
+#### `Flowerpot` (object)
++ flowerpot_name: my first flower pot (string) - 花盆的名字
++ flowerpot_id: 01 (string) - 花盆的ID
++ flowerpot_url: /flowerpot/01 (string) - 花盆的url
++ flowerpot_img_url: /image/01.png (string) - 花盆的自定义图片的url
++ flowerpot_plant_type: green (string) - 花盆内植被的种类
++ flowerpot_plant_name: my first plant (string) - 花盆内植物的别名
++ flowerpot_plant_type_id: 0101 (string) - 花盆内植物的id        
++ created_at: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,花盆创建/绑定的时间
++ flowerpot_tag": default (string) - 花盆的tag, 可以以此来设定主页，排序等
++ flowerpot_plant_status (PlantStatus) - 此刻当前花盆内植被的状态信息
++ flowerpot_trigger_status (TriggerStatus) - 此刻花盆智能触发器的状态
++ flowerpot_status (FlowerpotStatus) - 此刻当前花盆自身的状态
+
+#### `PlantStatus` (object)
++ air_temperature: 31.2 (number) - 此刻环境的温度
++ air_humidity: 60 (number) - 此刻环境的湿度
++ luminous_intensity: 300 (number) - 此刻环境的光照强度
++ soil_humidity: 65 (number) - 此刻土壤的湿度
+
+#### `TriggerStatus` (object)
++ water_trigger: false (boolean) - 此刻自动蓄水触发器的状态
+
+#### `FlowerpotStatus` (object)
++ now_time: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,此刻花盆的硬件时钟的时间 
++ now_electricity: 88.8 (string) - 此刻花盆的电量
++ now_water_volume: 65 (number) - 此刻花盆的水量
++ push_frequency: 30 (number) - 花盆向服务器推送植被状态的时间频率，单位为秒。

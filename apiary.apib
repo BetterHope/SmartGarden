@@ -19,20 +19,7 @@ This resource does not have any attributes. Instead it offers the initial API af
         }
         
 
-# Data Structures
-## OAuth grant request (object)
-+ `grant_type`: `client_credentials` (string, required)
 
-## OAuth jwt-bearer grant request (object)
-
-+ `grant_type`: `urn:ietf:params:oauth:grant-type:jwt-bearer` (string, required)
-+ `assertion`: `eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ` (string, required)
-
-## OAuth valid response (object)
-+ `access_token`: `eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ` (string, required) - valid JWT
-+ `scope`: `all` (string, required) - scopes of current token
-+ `expires_in`: `300` (number, required)
-+ `token_type`: `Bearer` (string, required)
 
 # Group OAuth 2
 
@@ -45,8 +32,10 @@ JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and s
 
 ## OAuth token exchange [/oauth/token]
 
-(获取最新的token)
+
 ### Exchange credentials for token [POST]
+
+获取最新的token
 
 + Request
     + Attributes (OAuth grant request)
@@ -62,6 +51,26 @@ JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and s
 
 + Response 200 (application/json)
     + Attributes (OAuth valid response)
+
+##  OAuth 2 Bearer Token protected resource [/protected]
+
+举一个需要验证的接口的栗子。
+
+## Data Structures
+
+### `OAuth grant request` (object)
++ `grant_type`: `client_credentials` (string, required)
+
+### `OAuth jwt-bearer grant request` (object)
+
++ `grant_type`: `urn:ietf:params:oauth:grant-type:jwt-bearer` (string, required)
++ assertion: `eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ` (string, required)
+
+### `OAuth valid response` (object)
++ `access_token`: `eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ` (string, required) - valid JWT
++ scope: all (string, required) - scopes of current token
++ `expires_in`: 300 (number, required)
++ `token_type`: Bearer (string, required)
 
 # Group User
 

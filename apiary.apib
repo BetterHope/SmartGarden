@@ -163,20 +163,50 @@ This action is create a new user
 + Response 410 (text/plain)
 
         The request parameters is broken!
-        
+
+
+
+# Data Structure
+
+### `Flowerpot` (object)
++ flowerpot_name: my first flower pot (string) - 花盆的名字
++ flowerpot_id: 01 (string) - 花盆的ID
++ flowerpot_url: /flowerpot/01 (string) - 花盆的url
++ flowerpot_img_url: /image/01.png (string) - 花盆的自定义图片的url
++ flowerpot_plant_type: green (string) - 花盆内植被的种类
++ flowerpot_plant_name: my first plant (string) - 花盆内植物的别名
++ flowerpot_plant_type_id: 0101 (string) - 花盆内植物的id        
++ created_at: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,花盆创建/绑定的时间
++ flowerpot_tag": default (string) - 花盆的tag, 可以以此来设定主页，排序等
++ flowerpot_plant_status (PlantStatus) - 此刻当前花盆内植被的状态信息
++ flowerpot_trigger_status (TriggerStatus) - 此刻花盆智能触发器的状态
++ flowerpot_status (FlowerpotStatus) - 此刻当前花盆自身的状态
+
+### `PlantStatus` (object)
++ air_temperature: 31.2 (number) - 此刻环境的温度
++ air_humidity: 60 (number) - 此刻环境的湿度
++ luminous_intensity: 300 (number) - 此刻环境的光照强度
++ soil_humidity: 65 (number) - 此刻土壤的湿度
+
+### `TriggerStatus` (object)
++ water_trigger: false (boolean) - 此刻自动蓄水触发器的状态
+
+### `FlowerpotStatus` (object)
++ now_time: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,此刻花盆的硬件时钟的时间 
++ now_electricity: 88.8 (string) - 此刻花盆的电量
++ now_water_volume: 65 (number) - 此刻花盆的水量
++ push_frequency: 30 (number) - 花盆向服务器推送植被状态的时间频率，单位为秒。
+     
 # Group Flowerpot
 
 Resources relatrd to Flowerpot in the API.
 花盆终端的相关API。
 
-## List all Flowerpots [/flowerpots]
+## Flowerpots [/flowerpots]
 
 获取所有的花盆对象数据。先验证，获取token，再请求本api。
 
-
-请求成功后会会获取一个数据容器，字段如下：
-
-+ flowerpots - An array of flowerpots object(当前用户所有花盆对象组成的数组)
+请求成功后会会获取一个数据容器，当前用户所有花盆对象组成的数组。
 
 ### View all Flowerpots [GET]
 
@@ -188,63 +218,7 @@ Resources relatrd to Flowerpot in the API.
     
 + Response 200 (application/json)
 
-            {
-                    "flowerpots" : 
-                    [
-                        {
-                            "flowerpot_name": "My first flowerpot",
-                            "flowerpot_id": "db54d5b4sd5b4sd65a",
-                            "flowerpot_url": "/flowerpots/1",
-                            "flowerpot_img_url": "/img/1.png",
-                            "flowerpot_plant_type": "greenplant",
-                            "flowerpot_plant_name": "my faviout flower",
-                            "flowerpot_plant_type_id": "456",                
-                            "created_at": "2018-03-11T08:40:51.620Z",
-                            "flowerpot_tag": "default",
-                            "flowerpot_push_frequency": "5"
-                            "flowerpot_plant_status": {
-                                "air_temperature": "20"
-                                "air_humidity": : "30"
-                                "luminous_intensity": "300"
-                                "soil_humidity": "35"
-                            },
-                            "flowerpot_trigger_status": {
-                                "water_trigger": "off"
-                            },
-                            "flower_self_status" : {
-                                "now_time":"2018-03-11T19:05:51.620Z"
-                                "now_water_volume": "90"
-                                "now_electricity": "54"
-                            }
-                        },
-                        {
-                            "flowerpot_name": "My Scond flowerpot",
-                            "flowerpot_id": "cccccccccccccccccccc",
-                            "flowerpot_url": "/flowerpots/2",
-                            "flowerpot_img_url": "/img/2.png",
-                            "flowerpot_plant_type": "greenplant",
-                            "flowerpot_plant_name": "my faviout flower",
-                            "flowerpot_plant_type_id": "456",                
-                            "created_at": "2018-03-11T08:40:51.620Z",
-                            "flowerpot_tag": "default",
-                            "flowerpot_push_frequency": "5"
-                            "flowerpot_plant_status": {
-                                "air_temperature": "20"
-                                "air_humidity": : "30"
-                                "luminous_intensity": "300"
-                                "soil_humidity": "35"
-                            },
-                            "flowerpot_trigger_status": {
-                                "water_trigger": "off"
-                            },
-                            "flower_self_status" : {
-                                "now_time":"2018-03-11T19:05:51.620Z"
-                                "now_water_volume": "90"
-                                "now_electricity": "54"
-                            }
-                        }
-                    ]
-            }
+    + Attributes (array[Flowerpot])
             
 + Response 401 (text/plain)
 
@@ -277,35 +251,24 @@ Resources relatrd to Flowerpot in the API.
 
         Flowerpot parameters is wrong!
 
-## Flowerpot [/flowerpots/{flowerpot_id}]
 
-### Data Structure
+## A Flowerpot [/flowerpots/{flowerpot_id}]
 
-#### `Flowerpot` (object)
-+ flowerpot_name: my first flower pot (string) - 花盆的名字
-+ flowerpot_id: 01 (string) - 花盆的ID
-+ flowerpot_url: /flowerpot/01 (string) - 花盆的url
-+ flowerpot_img_url: /image/01.png (string) - 花盆的自定义图片的url
-+ flowerpot_plant_type: green (string) - 花盆内植被的种类
-+ flowerpot_plant_name: my first plant (string) - 花盆内植物的别名
-+ flowerpot_plant_type_id: 0101 (string) - 花盆内植物的id        
-+ created_at: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,花盆创建/绑定的时间
-+ flowerpot_tag": default (string) - 花盆的tag, 可以以此来设定主页，排序等
-+ flowerpot_plant_status (PlantStatus) - 此刻当前花盆内植被的状态信息
-+ flowerpot_trigger_status (TriggerStatus) - 此刻花盆智能触发器的状态
-+ flowerpot_status (FlowerpotStatus) - 此刻当前花盆自身的状态
 
-#### `PlantStatus` (object)
-+ air_temperature: 31.2 (number) - 此刻环境的温度
-+ air_humidity: 60 (number) - 此刻环境的湿度
-+ luminous_intensity: 300 (number) - 此刻环境的光照强度
-+ soil_humidity: 65 (number) - 此刻土壤的湿度
+### View a flowerpot detail [GET]
 
-#### `TriggerStatus` (object)
-+ water_trigger: false (boolean) - 此刻自动蓄水触发器的状态
++ Parameters
+    + flowerpot_id : `01` (number, required) - id of flowerpot
+    
++ Request (application/json)
 
-#### `FlowerpotStatus` (object)
-+ now_time: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,此刻花盆的硬件时钟的时间 
-+ now_electricity: 88.8 (string) - 此刻花盆的电量
-+ now_water_volume: 65 (number) - 此刻花盆的水量
-+ push_frequency: 30 (number) - 花盆向服务器推送植被状态的时间频率，单位为秒。
+    + Headers
+    
+            Authentication: Bearer JWT
+        
++ Response 200 (application/json)
+
+        {
+            "result": "success"
+            "flowerpot_url": "/flowerpots/5"
+        }

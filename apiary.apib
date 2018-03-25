@@ -56,6 +56,15 @@ JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and s
 
 举一个需要验证的接口的栗子。
 
+### Status [GET]
++ Request
+    + Headers
+
+            Authentication: Bearer JWT
+
++ Response 200 (application/json)
+    + Attributes (Server response)
+
 ## Data Structures
 
 ### `OAuth grant request` (object)
@@ -71,6 +80,9 @@ JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and s
 + scope: all (string, required) - scopes of current token
 + `expires_in`: 300 (number, required)
 + `token_type`: Bearer (string, required)
+
+### Server response (object)
++ status: ok (string, required)
 
 # Group User
 
@@ -151,3 +163,112 @@ This action is create a new user
 + Response 410 (text/plain)
 
         The request parameters is broken!
+        
+# Group Flowerpot
+
+Resources relatrd to Flowerpot in the API.
+花盆终端的相关API。
+
+## List all Flowerpots [/flowerpots]
+
+获取所有的花盆对象数据。先验证，获取token，再请求本api。
+
+
+请求成功后会会获取一个数据容器，字段如下：
+
++ flowerpots - An array of flowerpots object(当前用户所有花盆对象组成的数组)
+
+### View all Flowerpots [GET]
+
++ Request(application/json)
+
+    + Headers
+
+            Authentication: Bearer JWT
+    
++ Response 200 (application/json)
+
+            {
+                    "flowerpots" : 
+                    [
+                        {
+                            "flowerpot_name": "My first flowerpot",
+                            "flowerpot_id": "db54d5b4sd5b4sd65a",
+                            "flowerpot_url": "/flowerpots/1",
+                            "flowerpot_img_url": "/img/1.png",
+                            "flowerpot_plant_type": "greenplant",
+                            "flowerpot_plant_name": "my faviout flower",
+                            "flowerpot_plant_type_id": "456",                
+                            "created_at": "2018-03-11T08:40:51.620Z",
+                            "flowerpot_tag": "default",
+                            "flowerpot_push_frequency": "5"
+                            "flowerpot_plant_status": {
+                                "air_temperature": "20"
+                                "air_humidity": : "30"
+                                "luminous_intensity": "300"
+                                "soil_humidity": "35"
+                            },
+                            "flowerpot_trigger_status": {
+                                "water_trigger": "off"
+                            },
+                            "flower_self_status" : {
+                                "now_time":"2018-03-11T19:05:51.620Z"
+                                "now_water_volume": "90"
+                                "now_electricity": "54"
+                            }
+                        },
+                        {
+                            "flowerpot_name": "My Scond flowerpot",
+                            "flowerpot_id": "cccccccccccccccccccc",
+                            "flowerpot_url": "/flowerpots/2",
+                            "flowerpot_img_url": "/img/2.png",
+                            "flowerpot_plant_type": "greenplant",
+                            "flowerpot_plant_name": "my faviout flower",
+                            "flowerpot_plant_type_id": "456",                
+                            "created_at": "2018-03-11T08:40:51.620Z",
+                            "flowerpot_tag": "default",
+                            "flowerpot_push_frequency": "5"
+                            "flowerpot_plant_status": {
+                                "air_temperature": "20"
+                                "air_humidity": : "30"
+                                "luminous_intensity": "300"
+                                "soil_humidity": "35"
+                            },
+                            "flowerpot_trigger_status": {
+                                "water_trigger": "off"
+                            }
+                            "flower_self_status" : {
+                                "now_time":"2018-03-11T19:05:51.620Z"
+                                "now_water_volume": "90"
+                                "now_electricity": "54"
+                            }
+                        }
+                    ]
+            }
+
+### Create a new flowerpot [POST]
+
++ Attributes
+    + flowerpot_name: `my new flowerpot` (required, string) - 花盆的名字
+    + flowerpot_id: `1s45d2d4d` (required, string) - 花盆的id，扫描二维码获得
+    + created_at: `2018-03-11T08:40:51.620Z` (required, string) - 绑定花盆的时间，精确到秒级。app可以通过用户点击提交按钮的时刻计算得到。
+    + flowerpot_tag: `default` (required, string) - 花盆的tag，属于保留字段，方便今后对于排序，默认选中等功能的支持。’
+    + flowerpot_plant_type: some (required, string) - 花盆内植物的种类
+    + flowerpot_plant_name: myplant (optional, string) - 花盆内植物的名字
+
++ Request (application/json)
+
+    + Headers
+    
+            Authentication: Bearer JWT
+        
++ Response 200 (application/json)
+
+        {
+            "result": "success"
+            "flowerpot_url": "/flowerpots/5"
+        }
+
++ Response 401 (text/plain)
+
+        Flowerpot parameters is wrong!

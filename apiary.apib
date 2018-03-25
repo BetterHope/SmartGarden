@@ -163,10 +163,17 @@ This action is create a new user
 + Response 410 (text/plain)
 
         The request parameters is broken!
+     
+# Group Flowerpot
 
+Resources relatrd to Flowerpot in the API.
+花盆终端的相关API。
 
+## Flowerpots [/flowerpots]
 
-# Data Structure
+获取所有的花盆对象数据。先验证，获取token，再请求本api。
+
+请求成功后会会获取一个数据容器，当前用户所有花盆对象组成的数组。
 
 ### `Flowerpot` (object)
 + flowerpot_name: my first flower pot (string) - 花盆的名字
@@ -183,30 +190,22 @@ This action is create a new user
 + flowerpot_status (FlowerpotStatus) - 此刻当前花盆自身的状态
 
 ### `PlantStatus` (object)
++ flowerpot_id: 01 (string) - 花盆的ID
 + air_temperature: 31.2 (number) - 此刻环境的温度
 + air_humidity: 60 (number) - 此刻环境的湿度
 + luminous_intensity: 300 (number) - 此刻环境的光照强度
 + soil_humidity: 65 (number) - 此刻土壤的湿度
 
 ### `TriggerStatus` (object)
++ flowerpot_id: 01 (string) - 花盆的ID
 + water_trigger: false (boolean) - 此刻自动蓄水触发器的状态
 
 ### `FlowerpotStatus` (object)
++ flowerpot_id: 01 (string) - 花盆的ID
 + now_time: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,此刻花盆的硬件时钟的时间 
 + now_electricity: 88.8 (string) - 此刻花盆的电量
 + now_water_volume: 65 (number) - 此刻花盆的水量
 + push_frequency: 30 (number) - 花盆向服务器推送植被状态的时间频率，单位为秒。
-     
-# Group Flowerpot
-
-Resources relatrd to Flowerpot in the API.
-花盆终端的相关API。
-
-## Flowerpots [/flowerpots]
-
-获取所有的花盆对象数据。先验证，获取token，再请求本api。
-
-请求成功后会会获取一个数据容器，当前用户所有花盆对象组成的数组。
 
 ### View all Flowerpots [GET]
 
@@ -252,7 +251,7 @@ Resources relatrd to Flowerpot in the API.
         Flowerpot parameters is wrong!
 
 
-## A Flowerpot [/flowerpots/{flowerpot_id}]
+## Flowerpot Object [/flowerpots/{flowerpot_id}]
 
 
 ### View a flowerpot detail [GET]
@@ -268,7 +267,89 @@ Resources relatrd to Flowerpot in the API.
         
 + Response 200 (application/json)
 
-        {
-            "result": "success"
-            "flowerpot_url": "/flowerpots/5"
-        }
+     + Attributes (array[Flowerpot])
+     
++ Response 401 (text/plain)
+
+        parameters is wrong!
+
+
+### Update a flowerpot [PUT]
+
+修改一个花盆对象, 前端可以先get到制定花盆的id，然后使用put方法返回新的对象，后台从里面取出id，若存在就updte，否则重新创建。
+
++ Attributes (array[Flowerpot])
+
++ Request (application/json)
+
+    + Headers
+    
+            Authentication: Bearer JWT
+
++ Response 200 (text/plain)
+
+        {id} update success!
+
++ Response 401 (text/plain)
+
+        Attributes is wrong!
+
++ Response 404 (text/plain)
+
+        NO the {id} flwerpot!
+
+### Push status data [POST]
+
+智能花盆终端定期更新数据
+
++ Attributes (object)
+    + flowerpot_id: 01 (string) - 花盆的ID
+    + air_temperature: 31.2 (number) - 此刻环境的温度
+    + air_humidity: 60 (number) - 此刻环境的湿度
+    + luminous_intensity: 300 (number) - 此刻环境的光照强度
+    + soil_humidity: 65 (number) - 此刻土壤的湿度
+    + water_trigger: false (boolean) - 此刻自动蓄水触发器的状态
+    + now_time: 2018-03-11T08:40:51.620Z (string) - An ISO8601 date,此刻花盆的硬件时钟的时间 
+    + now_electricity: 88.8 (string) - 此刻花盆的电量
+    + now_water_volume: 65 (number) - 此刻花盆的水量
+    + push_frequency: 30 (number) - 花盆向服务器推送植被状态的时间频率，单位为秒。
+
++ Request (application/json)
+
+    + Headers
+    
+            Authentication: Bearer JWT
+
++ Response 200 (text/plain)
+
+        {id} push success!
+
++ Response 401 (text/plain)
+
+        Attributes is wrong!
+
++ Response 404 (text/plain)
+
+        NO the {id} flwerpot!
+
+### Delete a flowerpot [DELETE]
+
++ Parameters
+    + flowerpot_id : `01` (number, required) - id of flowerpot
+    
++ Request (application/json)
+
+    + Headers
+    
+            Authentication: Bearer JWT
++ Response 200 (text/plain)
+
+        {id} remove success!
+
++ Response 401 (text/plain)
+
+        Parameters is wrong!
+
++ Response 404 (text/plain)
+
+        NO the {id} flwerpot!
